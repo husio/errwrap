@@ -1,6 +1,9 @@
 package errwrap
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 type errWrapper struct {
 	messages []string
@@ -24,10 +27,12 @@ func (e *errWrapper) Err() error {
 // Err wraps given error with message.
 //
 // Wrapping without message returns original error.
-func Err(err error, msg string) error {
-	if msg == "" {
+func Err(err error, format string, args ...interface{}) error {
+	if format == "" {
 		return err
 	}
+
+	msg := fmt.Sprintf(format, args...)
 
 	if e, ok := err.(*errWrapper); ok {
 		// do not modify original error, but reuse all the data
